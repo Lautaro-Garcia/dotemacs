@@ -85,6 +85,11 @@
   :diminish "!"
   :init (global-flycheck-mode))
 
+(use-package flycheck-color-mode-line
+  :ensure t
+  :init
+  (add-hook 'flycheck-mode-hook 'flycheck-color-mode-line-mode))
+
 (use-package nyan-mode
   :ensure t
   :init  (nyan-mode)
