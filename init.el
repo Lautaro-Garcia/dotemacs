@@ -1,8 +1,12 @@
 ;;; TODOS
 ;;; 1. Welcome screen
 ;;; 2. Check rainbow parens AND parinfer at the same time
+;;; 3. Move buffers
+;;; 4. Check folding (tested in JS, doesn't work)
 
 (setq make-backup-files nil)
+(setq-default indent-tabs-mode nil)
+(setq-default tab-width 2)
 
 (setq package-enable-at-startup nil)
 (setq package-archives '(("org"       . "http://orgmode.org/elpa/")
@@ -119,8 +123,18 @@
 
 (use-package tern
   :ensure t
+  :config
+  (add-to-list 'exec-path "/usr/local/bin")
   :init
-  (add-hook 'js-mode-hook 'tern-mode))
+  (add-hook 'js-mode-hook (lambda () (tern-mode t))))
+
+(use-package tern-auto-complete
+  :ensure t
+  :init
+  (eval-after-load 'tern
+    '(progn
+       (require 'tern-auto-complete)
+       (tern-ac-setup))))
 
 (use-package kite-mini
   :ensure t
@@ -156,7 +170,8 @@
   :mode ("\\.http\\'" . restclient-mode))
 
 (use-package magit
-  :ensure t)
+  :ensure t
+  :diminish auto-revert-mode)
 
 (use-package evil-magit
   :ensure t)
@@ -186,6 +201,11 @@
 (use-package spacemacs-theme
   :ensure t)
 
+(use-package exec-path-from-shell
+  :ensure t
+  :init
+  (exec-path-from-shell-initialize))
+
 (use-package general
   :ensure t
   :config
@@ -210,7 +230,7 @@
    "wm"  (lambda ()
            (interactive)
            (if (and (= 1 (length (window-list)))
-                  (assoc ?_ register-alist))
+                    (assoc ?_ register-alist))
              (jump-to-register ?_)
              (progn
                (window-configuration-to-register ?_)
@@ -243,7 +263,13 @@
 
   (general-define-key
    :states '(normal motion emacs visual)
-   "/" 'swiper))
+   "/" 'swiper)
+
+  (general-define-key
+   :states '(insert)
+   "M-ñ" (lambda () (interactive) (insert "~"))
+   "M-ç" (lambda () (interactive) (insert "}"))))
+
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
