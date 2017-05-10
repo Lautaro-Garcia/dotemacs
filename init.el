@@ -88,8 +88,6 @@
   (nyan-toggle-wavy-trail)
   (nyan-start-animation))
 
-(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
-
 (use-package spaceline
   :ensure t
   :init
@@ -160,6 +158,9 @@
 (use-package magit
   :ensure t)
 
+(use-package evil-magit
+  :ensure t)
+
 (use-package dockerfile-mode
   :ensure t
   :bind (:map dockerfile-mode-map
@@ -181,6 +182,9 @@
           ("C-c g" . elisp-slime-nav-find-elisp-thing-at-point))
   :config
   (add-hook 'emacs-lisp-mode-hook 'elisp-slime-nav-mode))
+
+(use-package spacemacs-theme
+  :ensure t)
 
 (use-package general
   :ensure t
