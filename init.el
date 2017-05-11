@@ -163,7 +163,8 @@
 
 (use-package emmet-mode
   :ensure t
-  :bind ("TAB" . emmet-expand-line)
+  :bind (:map emmet-mode-keymap
+          ("TAB" . emmet-expand-line))
   :init
   (progn
     (add-hook 'sgml-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
