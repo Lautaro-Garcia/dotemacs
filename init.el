@@ -143,11 +143,12 @@
        (require 'tern-auto-complete)
        (tern-ac-setup))))
 
-(use-package kite-mini
+(use-package nodejs-repl
   :ensure t
-  :init
-  (add-hook 'js-mode-hook (lambda () (kite-mini-mode t)))
-  (add-hook 'css-mode-hook (lambda () (kite-mini-mode t))))
+  :bind (:map js-mode-map
+          ("C-c f" . nodejs-repl-load-file)
+          ("C-c e" . nodejs-repl-send-region)
+          ("C-c TAB" . nodejs-repl-switch-to-repl)))
 
 (use-package auto-package-update
   :ensure t
