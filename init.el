@@ -8,6 +8,9 @@
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 2)
 
+(when (eq system-type 'darwin) ;; mac specific settings
+  (setq ns-right-option-modifier 'meta))
+
 (setq package-enable-at-startup nil)
 (setq package-archives '(("org"       . "http://orgmode.org/elpa/")
                          ("gnu"       . "http://elpa.gnu.org/packages/")
@@ -272,13 +275,7 @@
 
   (general-define-key
    :states '(normal motion emacs visual)
-   "/" 'swiper)
-
-  (general-define-key
-   :states '(insert)
-   "M-ñ" (lambda () (interactive) (insert "~"))
-   "M-ç" (lambda () (interactive) (insert "}"))))
-
+   "/" 'swiper))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
