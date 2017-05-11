@@ -57,7 +57,7 @@
   :bind (:map ivy-minibuffer-map
           ("C-j" . ivy-next-line)
           ("C-k" . ivy-previous-line)
-          ("C-h" . ivy-backward-kill-word)))
+          ("C-h" . ivy-backward-delete-char)))
 
 (use-package parinfer
   :ensure t
