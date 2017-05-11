@@ -99,6 +99,8 @@
 
 (use-package spaceline
   :ensure t
+  :config
+  (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
   :init
   (progn
     (require 'spaceline-config)
