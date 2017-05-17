@@ -1,15 +1,15 @@
 ;;; TODOS
 ;;; 1. Welcome screen
 ;;; 2. Check rainbow parens AND parinfer at the same time
-;;; 3. Move buffers
-;;; 4. Check folding (tested in JS, doesn't work)
+;;; 3. Check folding (tested in JS, doesn't work)
 
 (setq make-backup-files nil)
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 2)
 
 (when (eq system-type 'darwin) ;; mac specific settings
-  (setq ns-right-option-modifier 'meta))
+  (setq ns-option-modifier 'meta)
+  (setq ns-right-option-modifier nil))
 
 (setq package-enable-at-startup nil)
 (setq package-archives '(("org"       . "http://orgmode.org/elpa/")
@@ -218,6 +218,21 @@
   :init
   (exec-path-from-shell-initialize))
 
+(use-package gulp-task-runner
+  :ensure t)
+
+(use-package autopair
+  :ensure t
+  :diminish autopair-mode
+  :init (autopair-global-mode))
+
+(use-package json-mode
+  :ensure t
+  :mode ("\\.json\\'" . json-mode))
+
+(use-package package-lint
+  :ensure t)
+
 (use-package general
   :ensure t
   :config
@@ -232,13 +247,18 @@
    "fs"  'save-buffer
    "q"   'save-buffers-kill-terminal
    "w"   '(:ignore t :which-key "Windows")
-   "wv"  'split-window-right
-   "ws"  'split-window-below
+   "wk"  'evil-window-up
+   "wK"  'evil-window-move-very-top
+   "wj"  'evil-window-down
+   "wJ"  'evil-window-move-very-bottom
+   "wl"  'evil-window-right
+   "wL"  'evil-window-move-far-right
+   "wh"  'evil-window-left
+   "wH"  'evil-window-move-far-left
+   "wo"  'delete-other-windows
    "wd"  'delete-window
-   "wj"  'windmove-down
-   "wk"  'windmove-up
-   "wh"  'windmove-left
-   "wl"  'windmove-right
+   "ws"  'evil-window-split
+   "wv"  'evil-window-vsplit
    "wm"  (lambda ()
            (interactive)
            (if (and (= 1 (length (window-list)))
