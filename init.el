@@ -233,6 +233,9 @@
 (use-package package-lint
   :ensure t)
 
+(use-package counsel-spotify
+  :ensure t)
+
 (use-package general
   :ensure t
   :config
@@ -287,7 +290,15 @@
    "cp"  'evilnc-comment-or-uncomment-paragraphs
    "U"   'auto-package-update-now
    "g"   'magit-dispatch-popup
-   "l"   'linum-mode)
+   "l"   'linum-mode
+   "m"   '(:ignore t :which-key "Music")
+   "mt"  'counsel-spotify-toggle-play-pause
+   "mn"  'counsel-spotify-next
+   "mp"  'counsel-spotify-previous
+   "ms"  '(:ignore t :which-key "Search")
+   "msA" 'counsel-spotify-search-artist
+   "msa" 'counsel-spotify-search-album
+   "mst" 'counsel-spotify-search-track)
 
   (general-define-key
    :states '(normal motion emacs visual)
