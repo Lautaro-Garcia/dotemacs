@@ -161,8 +161,9 @@
 
 (use-package web-mode
   :ensure t
-  :config
-  (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode)))
+  :bind (:map web-mode-map
+          ("%" . web-mode-navigate))
+  :mode ("\\.html?\\'" . web-mode))
 
 (use-package emmet-mode
   :ensure t
