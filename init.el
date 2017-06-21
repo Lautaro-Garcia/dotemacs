@@ -237,6 +237,14 @@
 (use-package counsel-spotify
   :ensure t)
 
+(use-package projectile
+  :ensure t
+  :init (projectile-mode))
+
+(use-package counsel-projectile
+  :ensure t
+  :init (counsel-projectile-on))
+
 (use-package general
   :ensure t
   :config
@@ -274,8 +282,9 @@
    "b"   '(:ignore t :which-key "Buffers")
    "bd"  'kill-this-buffer
    "bb"  'ivy-switch-buffer
-   "p"   '(:ignore t :which-key "Parinfer")
-   "pt"  'parinfer-toggle-mode
+   "P"   '(:ignore t :which-key "Parinfer")
+   "Pt"  'parinfer-toggle-mode
+   "p"   '(projectile-command-map :which-key "Projectile")
    "e"   (general-simulate-keys "C-c !" t "Flycheck" Errors)
    "t"   'counsel-load-theme
    "SPC" 'counsel-M-x
