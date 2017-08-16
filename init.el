@@ -104,6 +104,7 @@
   :ensure t
   :config
   (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
+  (setq ns-use-srgb-colorspace nil)
   :init
   (progn
     (require 'spaceline-config)
@@ -214,6 +215,9 @@
 (use-package spacemacs-theme
   :ensure t)
 
+(use-package gruvbox-theme
+  :ensure t)
+
 (use-package exec-path-from-shell
   :ensure t
   :init
@@ -299,7 +303,9 @@
    "cl"  'evilnc-comment-or-uncomment-lines
    "cp"  'evilnc-comment-or-uncomment-paragraphs
    "U"   'auto-package-update-now
-   "g"   'magit-dispatch-popup
+   "g"   '(:ignore t :which-key "Magit")
+   "gg"  'magit-dispatch-popup
+   "gb"  'magit-blame
    "l"   'linum-mode
    "m"   '(:ignore t :which-key "Music")
    "mt"  'counsel-spotify-toggle-play-pause
@@ -312,10 +318,7 @@
 
   (general-define-key
    :states '(normal motion emacs visual)
-   "," (general-simulate-keys "C-c"))
-
-  (general-define-key
-   :states '(normal motion emacs visual)
+   "," (general-simulate-keys "C-c")
    "/" 'swiper))
 
 (custom-set-variables
