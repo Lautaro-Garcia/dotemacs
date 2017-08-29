@@ -83,10 +83,22 @@
   :ensure t
   :init (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
 
+(defun my/use-eslint-from-node-modules ()
+  (let ((root (locate-dominating-file (or (buffer-file-name) default-directory)
+               (lambda (dir)
+                 (let ((eslint (expand-file-name "node_modules/eslint/bin/eslint.js" dir)))
+                   (and eslint (file-executable-p eslint)))))))
+    (when root
+      (let ((eslint (expand-file-name "node_modules/eslint/bin/eslint.js" root)))
+        (setq-local flycheck-javascript-eslint-executable eslint)))))
+
 (use-package flycheck
   :ensure t
   :diminish "!"
-  :init (global-flycheck-mode))
+  :init
+  (progn
+    (global-flycheck-mode)
+    (add-hook 'flycheck-mode-hook #'my/use-eslint-from-node-modules)))
 
 (use-package flycheck-color-mode-line
   :ensure t
