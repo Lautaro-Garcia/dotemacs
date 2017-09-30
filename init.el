@@ -31,6 +31,11 @@
 
 (require 'use-package)
 
+(use-package dashboard
+  :ensure t
+  :config
+  (dashboard-setup-startup-hook))
+
 (use-package which-key
   :ensure t
   :diminish "Ꙍ"
