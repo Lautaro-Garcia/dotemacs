@@ -151,10 +151,16 @@
 
 (use-package tern
   :ensure t
+  :init (add-hook 'js-mode-hook (lambda () (tern-mode t)))
   :config
   (add-to-list 'exec-path "/usr/local/bin")
-  :init
-  (add-hook 'js-mode-hook (lambda () (tern-mode t))))
+  (dolist (keybinding '("C-c C-c" "C-c C-d" "C-c C-r"))
+    (unbind-key keybinding tern-mode-keymap))
+  :bind (:map tern-mode-keymap
+              ("C-c t" . tern-get-type)
+              ("C-c d" . tern-get-docs)
+              ("C-c r" . tern-rename-variable)))
+
 
 (use-package tern-auto-complete
   :ensure t
@@ -264,6 +270,7 @@
 
 (use-package projectile
   :ensure t
+  :diminish projectile-mode
   :init (projectile-mode))
 
 (use-package counsel-projectile
