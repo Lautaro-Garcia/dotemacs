@@ -185,8 +185,6 @@
 
 (use-package web-mode
   :ensure t
-  :bind (:map web-mode-map
-          ("%" . web-mode-navigate))
   :mode ("\\.html?\\'" . web-mode))
 
 (use-package emmet-mode
@@ -287,6 +285,32 @@
   :ensure t
   :mode (("\\.yaml\\'" . yaml-mode)
          ("\\.yml\\'" . yaml-mode)))
+
+(use-package clojure-mode
+  :ensure t)
+
+(use-package evil-goggles
+  :ensure t
+  :config
+  (evil-goggles-mode)
+  (evil-goggles-use-diff-faces))
+
+(use-package vi-tilde-fringe
+  :ensure t
+  :config
+  (global-vi-tilde-fringe-mode))
+
+(use-package origami
+  :ensure t
+  :config (origami-mode))
+
+(use-package diff-hl
+  :ensure t
+  :config (diff-hl-margin-mode))
+
+(use-package evil-matchit
+  :ensure t
+  :config (lambda (global-evil-matchit-mode 1)))
 
 (use-package general
   :ensure t
