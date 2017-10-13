@@ -112,20 +112,24 @@
 
 (use-package nyan-mode
   :ensure t
-  :init  (nyan-mode)
+  ;; :init  (nyan-mode)
   :config
   (nyan-toggle-wavy-trail)
   (nyan-start-animation))
 
-(use-package spaceline
+;; (use-package spaceline
+;;   :ensure t
+;;   :config
+;;   (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
+;;   (setq ns-use-srgb-colorspace nil)
+;;   :init
+;;   (progn
+;;     (require 'spaceline-config)
+;;     (spaceline-emacs-theme)))
+
+(use-package darkokai-theme
   :ensure t
-  :config
-  (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
-  (setq ns-use-srgb-colorspace nil)
-  :init
-  (progn
-    (require 'spaceline-config)
-    (spaceline-emacs-theme)))
+  :config (load-theme 'darkokai t))
 
 (use-package evil-nerd-commenter
   :ensure t)
@@ -391,30 +395,26 @@
  ;; If there is more than one, they won't work right.
  '(counsel-spotify-client-id "")
  '(counsel-spotify-client-secret "")
- '(custom-enabled-themes (quote (spacemacs-dark)))
+ '(custom-enabled-themes (quote (darkokai)))
  '(custom-safe-themes
    (quote
-    ("bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" default)))
+    ("6ee6f99dc6219b65f67e04149c79ea316ca4bcd769a9e904030d38908fd7ccf9" default)))
+ '(js-indent-level 2)
  '(package-selected-packages
    (quote
-    (haskell-mode jedi ac-anaconda anaconda-mode counsel-spotify nix-mode elisp-slime-nav markdown-mode dockerfile-mode magit restclient ws-butler emmet-mode web-mode auto-package-update kite-mini mini-kite wooky tern auto-complete angular-mode pretty-mode org-bullets spaceline spaceline-config spacemacs-theme nyan-mode flycheck rainbow-delimiters which-key use-package parinfer general evil-surround counsel))))
+    (darkokai-theme yafolding js2-mode gruvbox-theme grubvox-theme elisp-slime-nav markdown-mode dockerfile-mode magit restclient ws-butler emmet-mode web-mode auto-package-update kite-mini mini-kite wooky tern auto-complete angular-mode pretty-mode org-bullets spaceline spaceline-config spacemacs-theme nyan-mode flycheck rainbow-delimiters which-key use-package parinfer general evil-surround counsel))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
-
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
-
+ '(evil-goggles-delete-face ((t (:inherit diff-removed))))
+ '(evil-goggles-paste-face ((t (:inherit diff-added))))
+ '(evil-goggles-undo-redo-add-face ((t (:inherit diff-added))))
+ '(evil-goggles-undo-redo-change-face ((t (:inherit diff-changed))))
+ '(evil-goggles-undo-redo-remove-face ((t (:inherit diff-removed))))
+ '(evil-goggles-yank-face ((t (:inherit diff-changed)))))
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
