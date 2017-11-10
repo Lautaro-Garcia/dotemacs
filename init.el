@@ -1,8 +1,11 @@
+;;; dotemacs -- My own Emacs configuration file
+;;; Commentary:
 ;;; TODOS
 ;;; 1. Welcome screen
 ;;; 2. Check rainbow parens AND parinfer at the same time
 ;;; 3. Check folding (tested in JS, doesn't work)
 
+;;; Code:
 (setq make-backup-files nil)
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 2)
@@ -29,7 +32,9 @@
     (toggle-scroll-bar -1)
     (menu-bar-mode -1)))
 
-(require 'use-package)
+(eval-when-compile (require 'use-package))
+(require 'diminish)
+(require 'bind-key)
 
 (use-package dashboard
   :ensure t
@@ -86,9 +91,10 @@
 
 (use-package rainbow-delimiters
   :ensure t
-  :init (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
+  :init (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
 
 (defun my/use-eslint-from-node-modules ()
+  "Use local eslint from projects."
   (let ((root (locate-dominating-file (or (buffer-file-name) default-directory)
                (lambda (dir)
                  (let ((eslint (expand-file-name "node_modules/eslint/bin/eslint.js" dir)))
@@ -109,23 +115,6 @@
   :ensure t
   :init
   (add-hook 'flycheck-mode-hook 'flycheck-color-mode-line-mode))
-
-(use-package nyan-mode
-  :ensure t
-  ;; :init  (nyan-mode)
-  :config
-  (nyan-toggle-wavy-trail)
-  (nyan-start-animation))
-
-;; (use-package spaceline
-;;   :ensure t
-;;   :config
-;;   (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
-;;   (setq ns-use-srgb-colorspace nil)
-;;   :init
-;;   (progn
-;;     (require 'spaceline-config)
-;;     (spaceline-emacs-theme)))
 
 (use-package darkokai-theme
   :ensure t
@@ -165,7 +154,6 @@
               ("C-c d" . tern-get-docs)
               ("C-c r" . tern-rename-variable)))
 
-
 (use-package tern-auto-complete
   :ensure t
   :init
@@ -174,12 +162,12 @@
        (require 'tern-auto-complete)
        (tern-ac-setup))))
 
-(use-package nodejs-repl
+(use-package js-comint
   :ensure t
-  :bind (:map js-mode-map
-          ("C-c f" . nodejs-repl-load-file)
-          ("C-c e" . nodejs-repl-send-region)
-          ("C-c TAB" . nodejs-repl-switch-to-repl)))
+  :bind (:map js-comint-mode-map
+          ("C-c f" . js-comint-send-buffer)
+          ("C-c e" . js-comint-send-region)
+          ("C-c TAB" . js-comint-repl)))
 
 (use-package auto-package-update
   :ensure t
@@ -231,14 +219,12 @@
 
 (use-package elisp-slime-nav
   :ensure t
-  :bind (:map elisp-slime-nav-mode-map
-          ("C-c d" . elisp-slime-nav-describe-elisp-thing-at-point)
-          ("C-c g" . elisp-slime-nav-find-elisp-thing-at-point))
-  :config
-  (add-hook 'emacs-lisp-mode-hook 'elisp-slime-nav-mode))
-
-(use-package spacemacs-theme
-  :ensure t)
+  :diminish elisp-slime-nav-mode
+  :bind (:maps elisp-slime-nav-mode-map
+         ("C-c d" . elisp-slime-nav-describe-elisp-thing-at-point)
+         ("C-c g" . elisp-slime-nav-find-elisp-thing-at-point))
+  :init
+  (add-hook 'emacs-lisp-mode-hook #'elisp-slime-nav-mode))
 
 (use-package gruvbox-theme
   :ensure t)
@@ -247,9 +233,6 @@
   :ensure t
   :init
   (exec-path-from-shell-initialize))
-
-(use-package gulp-task-runner
-  :ensure t)
 
 (use-package autopair
   :ensure t
@@ -314,7 +297,17 @@
 
 (use-package evil-matchit
   :ensure t
-  :config (lambda (global-evil-matchit-mode 1)))
+  :config (global-evil-matchit-mode))
+
+(defun toggle-maximize-buffer ()
+  "Maximizes buffer."
+  (interactive)
+  (if (and (= 1 (length (window-list)))
+         (assoc ?_ register-alist))
+      (jump-to-register ?_)
+    (progn
+      (window-configuration-to-register ?_)
+      (delete-other-windows))))
 
 (use-package general
   :ensure t
@@ -342,21 +335,14 @@
    "wd"  'delete-window
    "ws"  'evil-window-split
    "wv"  'evil-window-vsplit
-   "wm"  (lambda ()
-           (interactive)
-           (if (and (= 1 (length (window-list)))
-                    (assoc ?_ register-alist))
-             (jump-to-register ?_)
-             (progn
-               (window-configuration-to-register ?_)
-               (delete-other-windows))))
+   "wm"  'toggle-maximize-buffer
    "b"   '(:ignore t :which-key "Buffers")
    "bd"  'kill-this-buffer
    "bb"  'ivy-switch-buffer
    "P"   '(:ignore t :which-key "Parinfer")
    "Pt"  'parinfer-toggle-mode
    "p"   '(projectile-command-map :which-key "Projectile")
-   "e"   (general-simulate-keys "C-c !" t "Flycheck" Errors)
+   "e"   (general-simulate-keys "C-c !" t nil nil "" Error)
    "t"   'counsel-load-theme
    "SPC" 'counsel-M-x
    "h"   '(:ignore t :which-key "Help")
