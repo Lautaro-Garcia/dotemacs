@@ -26,6 +26,9 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
+(unless (package-installed-p 'diminish)
+  (package-install 'diminish))
+
 (if window-system
   (progn
     (tool-bar-mode -1)
@@ -220,7 +223,7 @@
 (use-package elisp-slime-nav
   :ensure t
   :diminish elisp-slime-nav-mode
-  :bind (:maps elisp-slime-nav-mode-map
+  :bind (:map elisp-slime-nav-mode-map
          ("C-c d" . elisp-slime-nav-describe-elisp-thing-at-point)
          ("C-c g" . elisp-slime-nav-find-elisp-thing-at-point))
   :init
