@@ -263,7 +263,7 @@
 
 (use-package counsel-projectile
   :ensure t
-  :init (counsel-projectile-on))
+  :init (counsel-projectile-mode))
 
 (use-package jedi
   :ensure t
@@ -301,6 +301,30 @@
 (use-package evil-matchit
   :ensure t
   :config (global-evil-matchit-mode))
+
+(use-package tide
+  :ensure t
+  :config (setq company-tooltip-align-annotations t)
+  :bind (:map tide-mode-map
+         ("C-c d" . tide-jump-to-definition)
+         ("C-c r" . tide-references)
+         ("C-c e" . tide-project-errors)
+         ("C-c ?" . tide-documentation-at-point))
+  :init
+  (defun setup-tide-mode ()
+    (interactive)
+    (tide-setup)
+    (flycheck-mode +1)
+    (setq flycheck-check-syntax-automatically '(save mode-enabled))
+    (eldoc-mode +1)
+    (tide-hl-identifier-mode +1))
+  (add-hook 'before-save-hook 'tide-format-before-save)
+  (add-hook 'typescript-mode-hook #'setup-tide-mode))
+
+(use-package editorconfig
+  :ensure t
+  :config
+  (editorconfig-mode 1))
 
 (defun toggle-maximize-buffer ()
   "Maximizes buffer."
