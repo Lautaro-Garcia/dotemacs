@@ -53,24 +53,11 @@
         which-key-side-window-max-width 0.33
         which-key-idle-delay 0.05))
 
-(use-package evil
-  :ensure t
-  :diminish undo-tree-mode
-  :bind ("C-u" . evil-scroll-up)
-  :init (evil-mode))
-
-(use-package evil-surround
-  :ensure t
-  :init (global-evil-surround-mode))
-
 (use-package ivy
   :ensure t
   :diminish ivy-mode
   :init (ivy-mode 1)
-  :bind (:map ivy-minibuffer-map
-          ("C-j" . ivy-next-line)
-          ("C-k" . ivy-previous-line)
-          ("C-h" . ivy-backward-delete-char)))
+  :bind ("C-s" . 'swiper))
 
 (use-package parinfer
   :ensure t
@@ -79,7 +66,6 @@
   (setq parinfer-extensions
     '(defaults       ; should be included.
       pretty-parens  ; different paren styles for different modes.
-      evil           ; If you use Evil.
       smart-tab      ; C-b & C-f jump positions and smart shift with tab & S-tab.
       smart-yank))  ; Yank behavior depend on mode.
   :init
@@ -122,9 +108,6 @@
 (use-package darkokai-theme
   :ensure t
   :config (load-theme 'darkokai t))
-
-(use-package evil-nerd-commenter
-  :ensure t)
 
 (use-package org-bullets
   :ensure t
@@ -201,10 +184,9 @@
 
 (use-package magit
   :ensure t
-  :diminish auto-revert-mode)
-
-(use-package evil-magit
-  :ensure t)
+  :diminish auto-revert-mode
+  :bind ("C-x g" .'magit-dispatch-popup)
+        ("C-x G" . 'magit-status))
 
 (use-package dockerfile-mode
   :ensure t
@@ -253,8 +235,18 @@
   :ensure t
   :mode ("\\.hs\\'" . haskell-mode))
 
+(defvar counsel-spotify-map (make-sparse-keymap))
+
 (use-package counsel-spotify
-  :ensure t)
+  :ensure t
+  :bind-keymap ("C-x m" . counsel-spotify-map)
+  :bind (:map counsel-spotify-map
+          ("SPC" . 'counsel-spotify-toggle-play-pause)
+          ("<right>" . 'counsel-spotify-next)
+          ("<left>" . 'counsel-spotify-previous)
+          ("A" . 'counsel-spotify-search-artist)
+          ("a" . 'counsel-spotify-search-album)
+          ("t" . 'counsel-spotify-search-track)))
 
 (use-package projectile
   :ensure t
@@ -279,12 +271,6 @@
 (use-package clojure-mode
   :ensure t)
 
-(use-package evil-goggles
-  :ensure t
-  :config
-  (evil-goggles-mode)
-  (evil-goggles-use-diff-faces))
-
 (use-package vi-tilde-fringe
   :ensure t
   :config
@@ -297,10 +283,6 @@
 (use-package diff-hl
   :ensure t
   :config (diff-hl-margin-mode))
-
-(use-package evil-matchit
-  :ensure t
-  :config (global-evil-matchit-mode))
 
 (use-package tide
   :ensure t
@@ -336,70 +318,8 @@
       (window-configuration-to-register ?_)
       (delete-other-windows))))
 
-(use-package general
-  :ensure t
-  :config
-  (general-evil-setup t)
-  (general-define-key
-   :states '(normal motion insert emacs)
-   :prefix "SPC"
-   :non-normal-prefix "C-SPC"
-   "f"   '(:ignore t :which-key "Files")
-   "ff"  'counsel-find-file
-   "fr"  'counsel-recentf
-   "fs"  'save-buffer
-   "q"   'save-buffers-kill-terminal
-   "w"   '(:ignore t :which-key "Windows")
-   "wk"  'evil-window-up
-   "wK"  'evil-window-move-very-top
-   "wj"  'evil-window-down
-   "wJ"  'evil-window-move-very-bottom
-   "wl"  'evil-window-right
-   "wL"  'evil-window-move-far-right
-   "wh"  'evil-window-left
-   "wH"  'evil-window-move-far-left
-   "wo"  'delete-other-windows
-   "wd"  'delete-window
-   "ws"  'evil-window-split
-   "wv"  'evil-window-vsplit
-   "wm"  'toggle-maximize-buffer
-   "b"   '(:ignore t :which-key "Buffers")
-   "bd"  'kill-this-buffer
-   "bb"  'ivy-switch-buffer
-   "P"   '(:ignore t :which-key "Parinfer")
-   "Pt"  'parinfer-toggle-mode
-   "p"   '(projectile-command-map :which-key "Projectile")
-   "e"   (general-simulate-keys "C-c !" t nil nil "" Error)
-   "t"   'counsel-load-theme
-   "SPC" 'counsel-M-x
-   "h"   '(:ignore t :which-key "Help")
-   "hf"  'describe-function
-   "hv"  'describe-variable
-   "hp"  'describe-project
-   "hm"  'describe-mode
-   "hk"  'counsel-descbinds
-   "TAB" 'mode-line-other-buffer
-   "c"   '(:ignore t :which-key "Comment")
-   "cl"  'evilnc-comment-or-uncomment-lines
-   "cp"  'evilnc-comment-or-uncomment-paragraphs
-   "U"   'auto-package-update-now
-   "g"   '(:ignore t :which-key "Magit")
-   "gg"  'magit-dispatch-popup
-   "gb"  'magit-blame
-   "l"   'linum-mode
-   "m"   '(:ignore t :which-key "Music")
-   "mt"  'counsel-spotify-toggle-play-pause
-   "mn"  'counsel-spotify-next
-   "mp"  'counsel-spotify-previous
-   "ms"  '(:ignore t :which-key "Search")
-   "msA" 'counsel-spotify-search-artist
-   "msa" 'counsel-spotify-search-album
-   "mst" 'counsel-spotify-search-track)
+(global-set-key (kbd "C-x 1") 'toggle-maximize-buffer)
 
-  (general-define-key
-   :states '(normal motion emacs visual)
-   "," (general-simulate-keys "C-c")
-   "/" 'swiper))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -415,30 +335,10 @@
  '(js-indent-level 2)
  '(package-selected-packages
    (quote
-    (darkokai-theme yafolding js2-mode gruvbox-theme grubvox-theme elisp-slime-nav markdown-mode dockerfile-mode magit restclient ws-butler emmet-mode web-mode auto-package-update kite-mini mini-kite wooky tern auto-complete angular-mode pretty-mode org-bullets spaceline spaceline-config spacemacs-theme nyan-mode flycheck rainbow-delimiters which-key use-package parinfer general evil-surround counsel))))
+    (emacs-surround darkokai-theme yafolding js2-mode gruvbox-theme grubvox-theme elisp-slime-nav markdown-mode dockerfile-mode magit restclient ws-butler emmet-mode web-mode auto-package-update kite-mini mini-kite wooky tern auto-complete angular-mode pretty-mode org-bullets spaceline spaceline-config spacemacs-theme nyan-mode flycheck rainbow-delimiters which-key use-package parinfer counsel))))
 
-(custom-set-faces
+(custom-set-faces)
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(evil-goggles-delete-face ((t (:inherit diff-removed))))
- '(evil-goggles-paste-face ((t (:inherit diff-added))))
- '(evil-goggles-undo-redo-add-face ((t (:inherit diff-added))))
- '(evil-goggles-undo-redo-change-face ((t (:inherit diff-changed))))
- '(evil-goggles-undo-redo-remove-face ((t (:inherit diff-removed))))
- '(evil-goggles-yank-face ((t (:inherit diff-changed)))))
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
-
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
-
-;; custom-set-faces was added by Custom.
-;; If you edit it by hand, you could mess it up, so be careful.
-;; Your init file should contain only one such instance.
-;; If there is more than one, they won't work right.
