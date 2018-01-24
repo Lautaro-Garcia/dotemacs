@@ -128,7 +128,15 @@
   :config
   (setq js2-mode-show-parse-errors nil)
   (setq js2-mode-show-strict-warnings nil)
-  :mode ("\\.js\\'" . js2-mode))
+  (js-do-use-nvm)
+  :mode ("\\.js\\'" . js2-mode)
+  :bind (:map js2-mode-map
+          ("C-x C-e" . js-send-last-sexp)
+          ("C-c b" . js-send-buffer)
+          ("C-c C-v" . js-send-buffer-and-go)
+          ("C-c l" . js-load-file-and-go)
+          ("C-c t" . mocha-test-at-point)
+          ("C-c T" . mocha-test-project)))
 
 (use-package ac-js2
   :ensure t
@@ -136,12 +144,10 @@
   (add-hook 'js2-mode-hook 'ac-js2-mode))
 
 (use-package js-comint
-  :ensure t
-  :bind (:map js-comint-mode-map
-          ("C-x C-e" . js-send-last-sexp)
-          ("C-c b" . js-send-buffer)
-          ("C-c C-v" . js-send-buffer-and-go)
-          ("C-c l" . js-load-file-and-go)))
+  :ensure t)
+
+(use-package mocha
+  :ensure t)
 
 (use-package auto-package-update
   :ensure t
