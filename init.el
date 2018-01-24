@@ -119,41 +119,29 @@
   :init
   (add-hook 'prog-mode-hook 'pretty-mode))
 
-(use-package auto-complete
+(use-package company
   :ensure t
-  :init (auto-complete-mode)
-  :config
-  (ac-config-default)
-  :bind (:map ac-completing-map
-          ("C-j" . ac-next)
-          ("C-k" . ac-previous)))
+  :config (add-hook 'after-init-hook 'global-company-mode))
 
-(use-package tern
+(use-package js2-mode
   :ensure t
-  :init (add-hook 'js-mode-hook (lambda () (tern-mode t)))
   :config
-  (add-to-list 'exec-path "/usr/local/bin")
-  (dolist (keybinding '("C-c C-c" "C-c C-d" "C-c C-r"))
-    (unbind-key keybinding tern-mode-keymap))
-  :bind (:map tern-mode-keymap
-              ("C-c t" . tern-get-type)
-              ("C-c d" . tern-get-docs)
-              ("C-c r" . tern-rename-variable)))
+  (setq js2-mode-show-parse-errors nil)
+  (setq js2-mode-show-strict-warnings nil)
+  :mode ("\\.js\\'" . js2-mode))
 
-(use-package tern-auto-complete
+(use-package ac-js2
   :ensure t
   :init
-  (eval-after-load 'tern
-    '(progn
-       (require 'tern-auto-complete)
-       (tern-ac-setup))))
+  (add-hook 'js2-mode-hook 'ac-js2-mode))
 
 (use-package js-comint
   :ensure t
   :bind (:map js-comint-mode-map
-          ("C-c f" . js-comint-send-buffer)
-          ("C-c e" . js-comint-send-region)
-          ("C-c TAB" . js-comint-repl)))
+          ("C-x C-e" . js-send-last-sexp)
+          ("C-c b" . js-send-buffer)
+          ("C-c C-v" . js-send-buffer-and-go)
+          ("C-c l" . js-load-file-and-go)))
 
 (use-package auto-package-update
   :ensure t
@@ -176,6 +164,7 @@
 
 (use-package ws-butler
   :ensure t
+  :diminish ws-butler-mode
   :init (ws-butler-global-mode))
 
 (use-package restclient
@@ -194,6 +183,9 @@
           ("C-c b" . dockerfile-build-buffer)
           ("C-c B" . dockerfile-build-no-cache-buffer))
   :mode ("Dockerfile\\'" . dockerfile-mode))
+
+(use-package docker
+  :ensure t)
 
 (use-package markdown-mode
   :ensure t
@@ -305,6 +297,7 @@
 
 (use-package editorconfig
   :ensure t
+  :diminish editorconfig-mode
   :config
   (editorconfig-mode 1))
 
