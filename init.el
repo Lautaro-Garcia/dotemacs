@@ -68,19 +68,13 @@
       pretty-parens  ; different paren styles for different modes.
       smart-tab      ; C-b & C-f jump positions and smart shift with tab & S-tab.
       smart-yank))  ; Yank behavior depend on mode.
-  :init
-  (progn
-    (add-hook 'clojure-mode-hook #'parinfer-mode)
-    (add-hook 'emacs-lisp-mode-hook #'parinfer-mode)
-    (add-hook 'common-lisp-mode-hook #'parinfer-mode)
-    (add-hook 'scheme-mode-hook #'parinfer-mode)
-    (add-hook 'lisp-mode-hook #'parinfer-mode)))
+  :hook ((clojure-mode emacs-lisp-mode common-lisp-mode scheme-mode lisp-mode) . parinfer-mode))
 
 (use-package counsel :ensure t)
 
 (use-package rainbow-delimiters
   :ensure t
-  :init (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
+  :hook (prog-mode . rainbow-delimiters-mode))
 
 (defun my/use-eslint-from-node-modules ()
   "Use local eslint from projects."
@@ -102,8 +96,7 @@
 
 (use-package flycheck-color-mode-line
   :ensure t
-  :init
-  (add-hook 'flycheck-mode-hook 'flycheck-color-mode-line-mode))
+  :hook (flycheck-mode . flycheck-color-mode-line-mode))
 
 (use-package darkokai-theme
   :ensure t
@@ -111,17 +104,20 @@
 
 (use-package org-bullets
   :ensure t
-  :init
-  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+  :hook (org-mode . (lambda () (org-bullets-mode 1))))
+
+(use-package hl-todo
+  :ensure t
+  :diminish
+  :config (global-hl-todo-mode))
 
 (use-package pretty-mode
   :ensure t
-  :init
-  (add-hook 'prog-mode-hook 'pretty-mode))
+  :hook prog-mode)
 
 (use-package company
   :ensure t
-  :config (add-hook 'after-init-hook 'global-company-mode))
+  :hook (after-init . global-company-mode))
 
 (use-package js2-mode
   :ensure t
@@ -138,10 +134,16 @@
           ("C-c t" . mocha-test-at-point)
           ("C-c T" . mocha-test-project)))
 
+(use-package js2-refactor
+  :ensure t
+  :hook (js2-mode . js2-refactor-mode)
+  :config
+  (setq js2-skip-preprocessor-directives t)
+  (js2r-add-keybindings-with-prefix "C-c C-m"))
+
 (use-package ac-js2
   :ensure t
-  :init
-  (add-hook 'js2-mode-hook 'ac-js2-mode))
+  :hook (js2-mode . ac-js2-mode))
 
 (use-package js-comint
   :ensure t)
@@ -163,10 +165,7 @@
   :ensure t
   :bind (:map emmet-mode-keymap
           ("TAB" . emmet-expand-line))
-  :init
-  (progn
-    (add-hook 'web-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
-    (add-hook 'css-mode-hook  'emmet-mode))) ;; enable Emmet's css abbreviation.
+  :hook (web-mode css-mode))
 
 (use-package ws-butler
   :ensure t
@@ -206,8 +205,7 @@
   :bind (:map elisp-slime-nav-mode-map
          ("C-c d" . elisp-slime-nav-describe-elisp-thing-at-point)
          ("C-c g" . elisp-slime-nav-find-elisp-thing-at-point))
-  :init
-  (add-hook 'emacs-lisp-mode-hook #'elisp-slime-nav-mode))
+  :hook (emacs-lisp-mode . elisp-slime-nav-mode))
 
 (use-package gruvbox-theme
   :ensure t)
@@ -257,9 +255,9 @@
 
 (use-package jedi
   :ensure t
+  :hook (python-mode . jedi:setup)
   :config
-  (setq jedi:tooltip-method nil)
-  (add-hook 'python-mode-hook 'jedi:setup))
+  (setq jedi:tooltip-method nil))
 
 (use-package yaml-mode
   :ensure t
