@@ -1,9 +1,7 @@
 ;;; dotemacs -- My own Emacs configuration file
-;;; Commentary:
-;;; TODOS
-;;; 1. Welcome screen
-;;; 2. Check rainbow parens AND parinfer at the same time
-;;; 3. Check folding (tested in JS, doesn't work)
+;;; Comentary:
+;;; When things go slow:
+;;; emacs -Q -l profile-dotemacs/profile-dotemacs.el --eval "(setq profile-dotemacs-file (setq load-file-name \"init.el full path\"))" -f profile-dotemacs
 
 ;;; Code:
 (setq make-backup-files nil)
@@ -39,24 +37,20 @@
 (require 'diminish)
 (require 'bind-key)
 
-(use-package dashboard
-  :ensure t
-  :config
-  (dashboard-setup-startup-hook))
-
 (use-package which-key
   :ensure t
   :diminish "Ꙍ"
-  :init (which-key-mode)
-  :config
-  (setq which-key-sort-order 'which-key-key-order-alpha
-        which-key-side-window-max-width 0.33
-        which-key-idle-delay 0.05))
+  :config (which-key-mode)
+  :custom
+  (which-key-sort-order 'which-key-key-order-alpha)
+  (which-key--side-window-max-dimensions 0.33)
+  (which-key-idle-delay 0.05))
 
 (use-package ivy
   :ensure t
+  :defer 2
   :diminish ivy-mode
-  :init (ivy-mode 1)
+  :config (ivy-mode 1)
   :bind ("C-s" . 'swiper))
 
 (use-package parinfer
@@ -70,7 +64,9 @@
       smart-yank))  ; Yank behavior depend on mode.
   :hook ((clojure-mode emacs-lisp-mode common-lisp-mode scheme-mode lisp-mode) . parinfer-mode))
 
-(use-package counsel :ensure t)
+(use-package counsel
+  :defer t
+  :ensure t)
 
 (use-package rainbow-delimiters
   :ensure t
@@ -89,7 +85,8 @@
 (use-package flycheck
   :ensure t
   :diminish "!"
-  :init
+  :defer t
+  :config
   (progn
     (global-flycheck-mode)
     (add-hook 'flycheck-mode-hook #'my/use-eslint-from-node-modules)))
@@ -99,8 +96,8 @@
   :hook (flycheck-mode . flycheck-color-mode-line-mode))
 
 (use-package darkokai-theme
-  :ensure t
-  :config (load-theme 'darkokai t))
+  :defer t
+  :ensure t)
 
 (use-package org-bullets
   :ensure t
@@ -146,16 +143,18 @@
   :hook (js2-mode . ac-js2-mode))
 
 (use-package js-comint
+  :defer t
   :ensure t)
 
 (use-package mocha
-  :ensure t)
+  :ensure t
+  :defer t)
 
 (use-package auto-package-update
   :ensure t
-  :config
-  (setq auto-package-update-delete-old-versions t)
-  (auto-package-update-maybe))
+  :defer t
+  :custom (auto-package-update-delete-old-versions t)
+  :config (auto-package-update-maybe))
 
 (use-package web-mode
   :ensure t
@@ -179,8 +178,10 @@
 (use-package magit
   :ensure t
   :diminish auto-revert-mode
-  :bind ("C-x g" .'magit-dispatch-popup)
-        ("C-x G" . 'magit-status))
+  :defer 5
+  :bind
+  ("C-x g" .'magit-dispatch-popup)
+  ("C-x G" . 'magit-status))
 
 (use-package dockerfile-mode
   :ensure t
@@ -207,24 +208,18 @@
          ("C-c g" . elisp-slime-nav-find-elisp-thing-at-point))
   :hook (emacs-lisp-mode . elisp-slime-nav-mode))
 
-(use-package gruvbox-theme
-  :ensure t)
-
-(use-package exec-path-from-shell
-  :ensure t
-  :init
-  (exec-path-from-shell-initialize))
-
 (use-package autopair
   :ensure t
+  :defer t
   :diminish autopair-mode
-  :init (autopair-global-mode))
+  :config (autopair-global-mode))
 
 (use-package json-mode
   :ensure t
   :mode ("\\.json\\'" . json-mode))
 
 (use-package package-lint
+  :defer t
   :ensure t)
 
 (use-package haskell-mode
@@ -235,6 +230,10 @@
 
 (use-package counsel-spotify
   :ensure t
+  :defer 5
+  :custom
+  (counsel-spotify-client-id "")
+  (counsel-spotify-client-secret "")
   :bind-keymap ("C-x m" . counsel-spotify-map)
   :bind (:map counsel-spotify-map
           ("SPC" . 'counsel-spotify-toggle-play-pause)
@@ -246,12 +245,14 @@
 
 (use-package projectile
   :ensure t
+  :defer t
   :diminish projectile-mode
-  :init (projectile-mode))
+  :config (projectile-mode))
 
 (use-package counsel-projectile
   :ensure t
-  :init (counsel-projectile-mode))
+  :defer t
+  :config (counsel-projectile-mode))
 
 (use-package jedi
   :ensure t
@@ -265,19 +266,14 @@
          ("\\.yml\\'" . yaml-mode)))
 
 (use-package clojure-mode
-  :ensure t)
-
-(use-package vi-tilde-fringe
   :ensure t
-  :config
-  (global-vi-tilde-fringe-mode))
-
-(use-package origami
-  :ensure t
-  :config (origami-mode))
+  :mode(("\\.clj\\'" . clojure-mode)
+        ("\\.cljs'" . clojure-mode)
+        ("\\.cljc" . clojure-mode)))
 
 (use-package diff-hl
   :ensure t
+  :defer t
   :config (diff-hl-margin-mode))
 
 (use-package tide
@@ -319,23 +315,8 @@
 
 
 (custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(counsel-spotify-client-id "")
- '(counsel-spotify-client-secret "")
  '(custom-enabled-themes (quote (darkokai)))
  '(custom-safe-themes
    (quote
-    ("6ee6f99dc6219b65f67e04149c79ea316ca4bcd769a9e904030d38908fd7ccf9" default)))
- '(js-indent-level 2)
- '(package-selected-packages
-   (quote
-    (emacs-surround darkokai-theme yafolding js2-mode gruvbox-theme grubvox-theme elisp-slime-nav markdown-mode dockerfile-mode magit restclient ws-butler emmet-mode web-mode auto-package-update kite-mini mini-kite wooky tern auto-complete angular-mode pretty-mode org-bullets spaceline spaceline-config spacemacs-theme nyan-mode flycheck rainbow-delimiters which-key use-package parinfer counsel))))
-
+    ("6ee6f99dc6219b65f67e04149c79ea316ca4bcd769a9e904030d38908fd7ccf9" default))))
 (custom-set-faces)
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
