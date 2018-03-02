@@ -85,11 +85,16 @@
 (use-package flycheck
   :ensure t
   :diminish "!"
-  :defer t
   :config
   (progn
     (global-flycheck-mode)
     (add-hook 'flycheck-mode-hook #'my/use-eslint-from-node-modules)))
+
+(use-package exec-path-from-shell
+  :ensure t
+  :defer t
+  :init
+  (exec-path-from-shell-initialize))
 
 (use-package flycheck-color-mode-line
   :ensure t
@@ -246,6 +251,7 @@
 (use-package projectile
   :ensure t
   :defer t
+  :bind-keymap ("C-c p" . projectile-command-map)
   :diminish projectile-mode
   :config (projectile-mode))
 
