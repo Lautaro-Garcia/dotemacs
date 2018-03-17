@@ -223,6 +223,11 @@
   :ensure t
   :mode ("\\.json\\'" . json-mode))
 
+(use-package sass-mode
+  :ensure t
+  :mode (("\\.sass\\'" . sass-mode)
+         ("\\.scss\\'" . sass-mode)))
+
 (use-package package-lint
   :defer t
   :ensure t)
@@ -258,7 +263,7 @@
 (use-package counsel-projectile
   :ensure t
   :defer t
-  :config (counsel-projectile-mode))
+  :init (counsel-projectile-mode))
 
 (use-package jedi
   :ensure t
@@ -298,7 +303,6 @@
     (setq flycheck-check-syntax-automatically '(save mode-enabled))
     (eldoc-mode +1)
     (tide-hl-identifier-mode +1))
-  (add-hook 'before-save-hook 'tide-format-before-save)
   (add-hook 'typescript-mode-hook #'setup-tide-mode))
 
 (use-package editorconfig
