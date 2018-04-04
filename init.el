@@ -289,12 +289,16 @@
 
 (use-package tide
   :ensure t
-  :config (setq company-tooltip-align-annotations t)
+  :config
+  (setq company-tooltip-align-annotations t)
+  (setq tide-tsserver-executable "/usr/bin/tsserver") ;; Have tsserver installed globally
   :bind (:map tide-mode-map
          ("C-c d" . tide-jump-to-definition)
-         ("C-c r" . tide-references)
+         ("C-c R" . tide-references)
+         ("C-c r" . tide-rename-symbol)
          ("C-c e" . tide-project-errors)
-         ("C-c ?" . tide-documentation-at-point))
+         ("C-c ?" . tide-documentation-at-point)
+         ("C-c C-m" . tide-refactor))
   :init
   (defun setup-tide-mode ()
     (interactive)
