@@ -53,6 +53,13 @@
   :config (ivy-mode 1)
   :bind ("C-s" . 'swiper))
 
+(use-package undo-tree
+  :ensure t
+  :config (global-undo-tree-mode 1)
+  :bind
+  ("C-_" . 'undo)
+  ("C--" . 'redo))
+
 (use-package parinfer
   :ensure t
   :diminish "()"
@@ -314,6 +321,13 @@
   :diminish editorconfig-mode
   :config
   (editorconfig-mode 1))
+
+(use-package slime
+  :ensure t
+  :config
+  (load (expand-file-name "~/quicklisp/slime-helper.el"))
+  (setq inferior-lisp-program "/usr/bin/sbcl")
+  (setq slime-contribs '(slime-fancy)))
 
 (defun toggle-maximize-buffer ()
   "Maximizes buffer."
