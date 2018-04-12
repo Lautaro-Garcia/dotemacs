@@ -13,10 +13,11 @@
   (setq ns-right-option-modifier nil))
 
 (setq package-enable-at-startup nil)
-(setq package-archives '(("org"       . "http://orgmode.org/elpa/")
-                         ("gnu"       . "http://elpa.gnu.org/packages/")
-                         ("mepla"     . "https://melpa.org/packages/")
-                         ("marmalade" . "http://marmalade-repo.org/packages/")))
+(setq package-archives '(("org"           . "http://orgmode.org/elpa/")
+                         ("gnu"           . "http://elpa.gnu.org/packages/")
+                         ("mepla"         . "https://melpa.org/packages/")
+                         ("marmalade"     . "http://marmalade-repo.org/packages/")
+                         ("melpa-stable"  . "https://stable.melpa.org/packages/")))
 
 (package-initialize)
 
@@ -60,16 +61,10 @@
   ("C-_" . 'undo)
   ("C--" . 'redo))
 
-(use-package parinfer
+(use-package paredit
   :ensure t
   :diminish "()"
-  :config
-  (setq parinfer-extensions
-    '(defaults       ; should be included.
-      pretty-parens  ; different paren styles for different modes.
-      smart-tab      ; C-b & C-f jump positions and smart shift with tab & S-tab.
-      smart-yank))  ; Yank behavior depend on mode.
-  :hook ((clojure-mode emacs-lisp-mode common-lisp-mode scheme-mode lisp-mode) . parinfer-mode))
+  :hook ((clojure-mode emacs-lisp-mode common-lisp-mode scheme-mode lisp-mode) . paredit-mode))
 
 (use-package counsel
   :defer t
@@ -162,6 +157,17 @@
   :ensure t
   :defer t)
 
+(use-package elpy
+  ;; Packages needed:
+  ;; 1. jedi
+  ;; 2. flake8
+  ;; 3. autopep8
+  ;; 4. yapf
+  ;; 5. rope
+  :ensure t
+  :defer t
+  :init (elpy-enable))
+
 (use-package auto-package-update
   :ensure t
   :defer t
@@ -216,8 +222,7 @@
   :ensure t
   :diminish elisp-slime-nav-mode
   :bind (:map elisp-slime-nav-mode-map
-         ("C-c d" . elisp-slime-nav-describe-elisp-thing-at-point)
-         ("C-c g" . elisp-slime-nav-find-elisp-thing-at-point))
+         ("C-c d" . elisp-slime-nav-describe-elisp-thing-at-point))
   :hook (emacs-lisp-mode . elisp-slime-nav-mode))
 
 (use-package autopair
@@ -272,12 +277,6 @@
   :defer t
   :init (counsel-projectile-mode))
 
-(use-package jedi
-  :ensure t
-  :hook (python-mode . jedi:setup)
-  :config
-  (setq jedi:tooltip-method nil))
-
 (use-package yaml-mode
   :ensure t
   :mode (("\\.yaml\\'" . yaml-mode)
@@ -300,7 +299,7 @@
   (setq company-tooltip-align-annotations t)
   (setq tide-tsserver-executable "/usr/bin/tsserver") ;; Have tsserver installed globally
   :bind (:map tide-mode-map
-         ("C-c d" . tide-jump-to-definition)
+         ("M ." . tide-jump-to-definition)
          ("C-c R" . tide-references)
          ("C-c r" . tide-rename-symbol)
          ("C-c e" . tide-project-errors)
@@ -343,8 +342,30 @@
 
 
 (custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(auto-package-update-delete-old-versions t t)
+ '(counsel-spotify-client-id "")
+ '(counsel-spotify-client-secret "")
  '(custom-enabled-themes (quote (darkokai)))
  '(custom-safe-themes
    (quote
-    ("6ee6f99dc6219b65f67e04149c79ea316ca4bcd769a9e904030d38908fd7ccf9" default))))
-(custom-set-faces)
+    ("6ee6f99dc6219b65f67e04149c79ea316ca4bcd769a9e904030d38908fd7ccf9" default)))
+ '(package-selected-packages
+   (quote
+    (cedit paredit editorconfig tide diff-hl clojure-mode yaml-mode jedi counsel-projectile projectile counsel-spotify haskell-mode package-lint sass-mode autopair elisp-slime-nav markdown-mode docker dockerfile-mode magit restclient ws-butler emmet-mode web-mode auto-package-update mocha js-comint ac-js2 js2-refactor js2-mode company pretty-mode hl-todo org-bullets darkokai-theme flycheck-color-mode-line exec-path-from-shell flycheck rainbow-delimiters counsel parinfer ivy which-key diminish use-package)))
+ '(which-key--side-window-max-dimensions 0.33 t)
+ '(which-key-idle-delay 0.05)
+ '(which-key-sort-order (quote which-key-key-order-alpha)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
