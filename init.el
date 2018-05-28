@@ -15,7 +15,7 @@
 (setq package-enable-at-startup nil)
 (setq package-archives '(("org"           . "http://orgmode.org/elpa/")
                          ("gnu"           . "http://elpa.gnu.org/packages/")
-                         ("mepla"         . "https://melpa.org/packages/")
+                         ("melpa"         . "https://melpa.org/packages/")
                          ("marmalade"     . "http://marmalade-repo.org/packages/")
                          ("melpa-stable"  . "https://stable.melpa.org/packages/")))
 
@@ -95,16 +95,18 @@
 (use-package exec-path-from-shell
   :ensure t
   :defer t
-  :init
+  :config
   (exec-path-from-shell-initialize))
 
-(use-package flycheck-color-mode-line
+(use-package all-the-icons
   :ensure t
-  :hook (flycheck-mode . flycheck-color-mode-line-mode))
+  :defer t)
 
-(use-package darkokai-theme
+(use-package zerodark-theme
   :defer t
-  :ensure t)
+  :ensure t
+  :config
+  (zerodark-setup-modeline-format))
 
 (use-package org-bullets
   :ensure t
@@ -166,7 +168,7 @@
   ;; 5. rope
   :ensure t
   :defer t
-  :init (elpy-enable))
+  :config (elpy-enable))
 
 (use-package auto-package-update
   :ensure t
@@ -274,8 +276,7 @@
 
 (use-package counsel-projectile
   :ensure t
-  :defer t
-  :init (counsel-projectile-mode))
+  :config (counsel-projectile-mode))
 
 (use-package yaml-mode
   :ensure t
@@ -299,7 +300,6 @@
   (setq company-tooltip-align-annotations t)
   (setq tide-tsserver-executable "/usr/bin/tsserver") ;; Have tsserver installed globally
   :bind (:map tide-mode-map
-         ("M ." . tide-jump-to-definition)
          ("C-c R" . tide-references)
          ("C-c r" . tide-rename-symbol)
          ("C-c e" . tide-project-errors)
