@@ -1,7 +1,7 @@
 ;;; dotemacs -- My own Emacs configuration file
-;;; Comentary:
+;;; Commentary:
 ;;; When things go slow:
-;;; emacs -Q -l profile-dotemacs/profile-dotemacs.el --eval "(setq profile-dotemacs-file (setq load-file-name \"init.el full path\"))" -f profile-dotemacs
+;;; Emacs -Q -l profile-dotemacs/profile-dotemacs.el --eval "(setq profile-dotemacs-file (setq load-file-name \"init.el full path\"))" -f profile-dotemacs
 
 ;;; Code:
 (setq make-backup-files nil)
@@ -38,6 +38,8 @@
 (require 'diminish)
 (require 'bind-key)
 
+(toggle-truncate-lines t)
+
 (use-package which-key
   :ensure t
   :diminish "Ꙍ"
@@ -56,6 +58,7 @@
 
 (use-package undo-tree
   :ensure t
+  :diminish
   :config (global-undo-tree-mode 1)
   :bind
   ("C-_" . 'undo)
@@ -86,7 +89,7 @@
 
 (use-package flycheck
   :ensure t
-  :diminish "!"
+  :diminish " ! "
   :config
   (progn
     (global-flycheck-mode)
@@ -123,6 +126,7 @@
 
 (use-package company
   :ensure t
+  :diminish
   :hook (after-init . global-company-mode))
 
 (use-package js2-mode
@@ -142,14 +146,33 @@
 
 (use-package js2-refactor
   :ensure t
+  :diminish
   :hook (js2-mode . js2-refactor-mode)
   :config
   (setq js2-skip-preprocessor-directives t)
   (js2r-add-keybindings-with-prefix "C-c C-m"))
 
-(use-package ac-js2
+(use-package lsp-mode
+  :ensure t)
+
+(use-package company-lsp
   :ensure t
-  :hook (js2-mode . ac-js2-mode))
+  :after (lsp-mode company)
+  :init (push 'company-lsp company-backends))
+
+(use-package lsp-ui
+  :ensure t
+  :hook (lsp-mode . lsp-ui-mode)
+  :config (lsp-ui-sideline-mode t)
+  :bind
+  ("M-." . lsp-ui-peek-find-definitions)
+  ("M-?" . lsp-ui-peek-find-references))
+
+(use-package lsp-javascript-typescript
+  :ensure t
+  :hook
+  (js2-mode . lsp-javascript-typescript-enable)
+  (typescript-mode . lsp-javascript-typescript-enable))
 
 (use-package js-comint
   :defer t
@@ -189,7 +212,7 @@
 (use-package ws-butler
   :ensure t
   :diminish ws-butler-mode
-  :init (ws-butler-global-mode))
+  :config (ws-butler-global-mode))
 
 (use-package restclient
   :ensure t
@@ -296,6 +319,7 @@
 
 (use-package tide
   :ensure t
+  :diminish
   :config
   (setq company-tooltip-align-annotations t)
   (setq tide-tsserver-executable "/usr/bin/tsserver") ;; Have tsserver installed globally
@@ -304,16 +328,7 @@
          ("C-c r" . tide-rename-symbol)
          ("C-c e" . tide-project-errors)
          ("C-c ?" . tide-documentation-at-point)
-         ("C-c C-m" . tide-refactor))
-  :init
-  (defun setup-tide-mode ()
-    (interactive)
-    (tide-setup)
-    (flycheck-mode +1)
-    (setq flycheck-check-syntax-automatically '(save mode-enabled))
-    (eldoc-mode +1)
-    (tide-hl-identifier-mode +1))
-  (add-hook 'typescript-mode-hook #'setup-tide-mode))
+         ("C-c C-m" . tide-refactor)))
 
 (use-package editorconfig
   :ensure t
@@ -368,4 +383,6 @@
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
+;; If there is more than one, they won't work right.
+(provide 'init)
+;;; init.el ends here
