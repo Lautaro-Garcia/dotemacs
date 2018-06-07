@@ -137,7 +137,7 @@
   (js-do-use-nvm)
   :mode ("\\.js\\'" . js2-mode)
   :bind (:map js2-mode-map
-          ("C-x C-e" . js-send-last-sexp)
+          ("C-c C-c" . js-send-last-sexp)
           ("C-c b" . js-send-buffer)
           ("C-c C-v" . js-send-buffer-and-go)
           ("C-c l" . js-load-file-and-go)
@@ -273,6 +273,14 @@
   :ensure t
   :mode ("\\.hs\\'" . haskell-mode))
 
+(use-package intero
+  :ensure t
+  :hook (haskell-mode . intero-mode))
+
+;; (use-package lsp-haskell
+;;   :ensure t
+;;   :hook (haskell-mode . lsp-haskell-enable))
+
 (defvar counsel-spotify-map (make-sparse-keymap))
 
 (use-package counsel-spotify
@@ -320,6 +328,7 @@
 (use-package tide
   :ensure t
   :diminish
+  :hook (typescript-mode . tide-setup)
   :config
   (setq company-tooltip-align-annotations t)
   (setq tide-tsserver-executable "/usr/bin/tsserver") ;; Have tsserver installed globally
