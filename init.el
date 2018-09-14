@@ -69,6 +69,10 @@
   :diminish "()"
   :hook ((clojure-mode emacs-lisp-mode common-lisp-mode scheme-mode lisp-mode) . paredit-mode))
 
+(use-package paredit-everywhere
+  :ensure t
+  :hook (prog-mode . paredit-everywhere-mode))
+
 (use-package counsel
   :defer t
   :ensure t)
@@ -371,15 +375,55 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(auto-package-update-delete-old-versions t t)
+ '(compilation-message-face (quote default))
  '(counsel-spotify-client-id "")
  '(counsel-spotify-client-secret "")
- '(custom-enabled-themes (quote (darkokai)))
+ '(custom-enabled-themes (quote (zerodark)))
  '(custom-safe-themes
    (quote
-    ("6ee6f99dc6219b65f67e04149c79ea316ca4bcd769a9e904030d38908fd7ccf9" default)))
+    ("ff79b206ad804c41a37b7b782aca44201edfa8141268a6cdf60b1c0916343bd4" "51ba4e2db6df909499cd1d85b6be2e543a315b004c67d6f72e0b35b4eb1ef3de" "6ee6f99dc6219b65f67e04149c79ea316ca4bcd769a9e904030d38908fd7ccf9" default)))
+ '(fci-rule-color "#424748")
+ '(highlight-changes-colors (quote ("#ff8eff" "#ab7eff")))
+ '(highlight-tail-colors
+   (quote
+    (("#424748" . 0)
+     ("#63de5d" . 20)
+     ("#4BBEAE" . 30)
+     ("#1DB4D0" . 50)
+     ("#9A8F21" . 60)
+     ("#A75B00" . 70)
+     ("#F309DF" . 85)
+     ("#424748" . 100))))
+ '(magit-diff-use-overlays nil)
  '(package-selected-packages
    (quote
-    (cedit paredit editorconfig tide diff-hl clojure-mode yaml-mode jedi counsel-projectile projectile counsel-spotify haskell-mode package-lint sass-mode autopair elisp-slime-nav markdown-mode docker dockerfile-mode magit restclient ws-butler emmet-mode web-mode auto-package-update mocha js-comint ac-js2 js2-refactor js2-mode company pretty-mode hl-todo org-bullets darkokai-theme flycheck-color-mode-line exec-path-from-shell flycheck rainbow-delimiters counsel parinfer ivy which-key diminish use-package)))
+    (paredit-everywhere company-lsp intero lsp-javascript-typescript lsp-ui lsp-mode indium elpy true undo-tree cedit paredit editorconfig tide diff-hl clojure-mode yaml-mode counsel-projectile projectile counsel-spotify haskell-mode package-lint sass-mode autopair elisp-slime-nav markdown-mode docker dockerfile-mode magit restclient ws-butler emmet-mode web-mode auto-package-update mocha js-comint ac-js2 js2-refactor js2-mode company pretty-mode hl-todo org-bullets exec-path-from-shell flycheck rainbow-delimiters counsel parinfer ivy which-key diminish use-package)))
+ '(pos-tip-background-color "#E6DB74")
+ '(pos-tip-foreground-color "#242728")
+ '(vc-annotate-background nil)
+ '(vc-annotate-color-map
+   (quote
+    ((20 . "#ff0066")
+     (40 . "#CF4F1F")
+     (60 . "#C26C0F")
+     (80 . "#E6DB74")
+     (100 . "#AB8C00")
+     (120 . "#A18F00")
+     (140 . "#989200")
+     (160 . "#8E9500")
+     (180 . "#63de5d")
+     (200 . "#729A1E")
+     (220 . "#609C3C")
+     (240 . "#4E9D5B")
+     (260 . "#3C9F79")
+     (280 . "#53f2dc")
+     (300 . "#299BA6")
+     (320 . "#2896B5")
+     (340 . "#2790C3")
+     (360 . "#06d8ff"))))
+ '(vc-annotate-very-old-color nil)
+ '(weechat-color-list
+   (unspecified "#242728" "#424748" "#F70057" "#ff0066" "#86C30D" "#63de5d" "#BEB244" "#E6DB74" "#40CAE4" "#06d8ff" "#FF61FF" "#ff8eff" "#00b2ac" "#53f2dc" "#f8fbfc" "#ffffff"))
  '(which-key--side-window-max-dimensions 0.33 t)
  '(which-key-idle-delay 0.05)
  '(which-key-sort-order (quote which-key-key-order-alpha)))
@@ -388,7 +432,15 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(rainbow-delimiters-depth-1-face ((t (:inherit rainbow-delimiters-base-face :foreground "#DA8548"))))
+ '(rainbow-delimiters-depth-2-face ((t (:inherit rainbow-delimiters-base-face :foreground "#61AFEF"))))
+ '(rainbow-delimiters-depth-3-face ((t (:inherit rainbow-delimiters-base-face :foreground "#C678DD"))))
+ '(rainbow-delimiters-depth-4-face ((t (:inherit rainbow-delimiters-base-face :foreground "#5593C7"))))
+ '(rainbow-delimiters-depth-5-face ((t (:inherit rainbow-delimiters-base-face :foreground "#8EB161"))))
+ '(rainbow-delimiters-depth-6-face ((t (:inherit rainbow-delimiters-base-face :foreground "#DA8548"))))
+ '(rainbow-delimiters-depth-7-face ((t (:inherit rainbow-delimiters-base-face :foreground "#61AFEF"))))
+ '(rainbow-delimiters-depth-8-face ((t (:inherit rainbow-delimiters-base-face :foreground "#C678DD"))))
+ '(rainbow-delimiters-depth-9-face ((t (:inherit rainbow-delimiters-base-face :foreground "#5593C7")))))
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
