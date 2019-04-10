@@ -1,0 +1,296 @@
+* Bootstrap
+** Mejores defaults
+Quitar elementos visuales de más.
+#+BEGIN_SRC emacs-lisp
+(when window-system
+  (blink-cursor-mode 0)
+  (scroll-bar-mode 0)
+  (tool-bar-mode 0)
+  (tooltip-mode 0))
+#+END_SRC
+
+Maximizar un buffer debería ser toggleable
+#+BEGIN_SRC emacs-lisp
+(defun toggle-maximize-buffer ()
+  "Maximizes buffer."
+  (interactive)
+  (if (and (= 1 (length (window-list)))
+         (assoc ?_ register-alist))
+      (jump-to-register ?_)
+    (progn
+      (window-configuration-to-register ?_)
+      (delete-other-windows))))
+
+(global-set-key (kbd "C-x 1") 'toggle-maximize-buffer)
+#+END_SRC
+
+Otros defaults en general.
+#+BEGIN_SRC emacs-lisp
+(setq-default
+ ad-redefinition-action 'accept
+ auto-window-vscroll nil
+ confirm-kill-emacs 'yes-or-no-p
+ cursor-in-non-selected-windows t
+ fill-column 80
+ help-window-select t
+ indent-tabs-mode nil
+ inhibit-startup-screen t
+ initial-scratch-message ""
+ left-margin-width 1 right-margin-width 1
+ mouse-yank-at-point t
+ ns-use-srgb-colorspace nil
+ recenter-positions '(5 top bottom)
+ scroll-conservatively most-positive-fixnum
+ scroll-margin 10
+ select-enable-clipboard t
+ sentence-end-double-space nil
+ show-trailing-whitespace nil
+ split-height-threshold nil
+ split-width-threshold nil
+ tab-width 4
+ truncate-lines t
+ uniquify-buffer-name-style 'forward
+ window-combination-resize t
+ x-stretch-cursor t)
+(cd "~/")
+(delete-selection-mode 1)
+(fringe-mode 0)
+(fset 'yes-or-no-p 'y-or-n-p)
+(menu-bar-mode 0)
+(mouse-avoidance-mode 'banish)
+(put 'downcase-region 'disabled nil)
+(put 'upcase-region 'disabled nil)
+(set-default-coding-systems 'utf-8)
+#+END_SRC
+Que dispare el Garbage-Collector cuando el buffer no tenga el foco.
+Emacs se /debería/ sentir más ágil
+#+BEGIN_SRC emacs-lisp
+(add-hook 'focus-out-hook #'garbage-collect)
+#+END_SRC
+** Cargar =.custom.el=
+Indicarle a Emacs que carge las configuraciones en un archivo aparte,
+en vez de agregarlas al final de este archivo (que encima está en =org=
+y seguramente se rompa al agregar algo)
+#+BEGIN_SRC emacs-lisp
+(setq-default custom-file (expand-file-name ".custom.el" user-emacs-directory))
+(when (file-exists-p custom-file)
+  (load custom-file))
+#+END_SRC
+** Cargar =.secrets.el=
+Así tengo los tokens fuera de versionado
+#+BEGIN_SRC emacs-lisp
+(let ((secret.el (expand-file-name ".secret.el" user-emacs-directory)))
+  (when (file-exists-p secret.el)
+    (load secret.el)))
+#+END_SRC
+** Tema
+#+BEGIN_SRC emacs-lisp
+(use-package zerodark-theme)
+
+(use-package silkworm-theme
+  :demand t)
+#+END_SRC
+* Features
+** Autocompletado
+#+BEGIN_QUOTE
+Company is a text completion framework for Emacs. The name stands for "complete
+anything". It uses pluggable back-ends and front-ends to retrieve and display
+completion candidates.
+
+[[http://company-mode.github.io/][Dmitry Gutov]]
+#+END_QUOTE
+
+#+BEGIN_SRC emacs-lisp
+(use-package company
+  :defer 1
+  :delight
+  :bind
+  (:map company-active-map
+    ("ESC"        . company-cancel)
+    ("RET"        . nil)
+    ([return]     . nil)
+    ("<C-return>" . company-complete-selection))
+  :config
+  (global-company-mode 1)
+  (setq-default
+   company-idle-delay .2
+   company-minimum-prefix-length 1
+   company-require-match nil
+   company-tooltip-align-annotations t))
+   #+END_SRC
+** Descubribilidad (?)
+[[https://github.com/justbur/emacs-which-key][Which key]] es un paquete para que aparezca un buffer inferior contándote
+qué nuevo comando podés apretar cuando tipeás alguno
+#+BEGIN_SRC emacs-lisp
+(use-package which-key
+  :delight " Ꙍ"
+  :defer 1
+  :config
+  (which-key-mode)
+  (setq-default
+    which-key-sort-order 'which-key-key-order-alpha
+    which-key--side-window-max-dimensions 0.33
+    which-key-idle-delay 0.05))
+#+END_SRC
+** Git
+#+BEGIN_SRC emacs-lisp
+(use-package magit
+  :delight auto-revert-mode
+  :defer 5
+  :bind
+  ("C-x g" . 'magit-dispatch-popup)
+  ("C-x G" . 'magit-status))
+#+END_SRC
+** Línea de comandos
+Para la interfaz de línea de comandos prefiero usar [[https://github.com/abo-abo/swiper][Ivy]] a [[https://github.com/emacs-helm/helm][Helm]]
+porque me parece más rápido y conceptualmente más copado
+#+BEGIN_SRC emacs-lisp
+(use-package ivy
+  :defer 2
+  :delight
+  :config (ivy-mode 1)
+  :bind ("C-s" . 'swiper))
+
+(use-package counsel
+  :bind ("C-x t" . 'counsel-load-theme))
+
+(use-package all-the-icons-ivy
+  :config
+  (all-the-icons-ivy-setup))
+#+END_SRC
+** Parinfer
+La filosofía de [[https://github.com/DogLooksGood/parinfer-mode][Parinfer]] es bien distinta a la de [[https://www.emacswiki.org/emacs/ParEdit][Paredit]] y busca, básicamente,
+que uno se olvide directamente de poner manualmente los paréntesis (llevándolo al
+punto de que apenas sean visibles en el fuente). La herramienta infiere cuántos
+paréntesis tiene que poner según el grado de indentación del texto.
+#+BEGIN_SRC emacs-lisp
+(use-package parinfer
+  :delight
+  :config
+  (setq-default
+    parinfer-extensions '(defaults pretty-parens smart-yank)
+    parinfer-auto-switch-indent-mode t)
+  :hook
+  (emacs-lisp-mode . parinfer-mode)
+  (common-lisp-mode . parinfer-mode)
+  (lisp-mode . parinfer-mode)
+  (clojure-mode . parinfer-mode))
+#+END_SRC
+** Projectile
+#+BEGIN_SRC emacs-lisp
+(use-package projectile
+  :defer 1
+  :init
+  (setq-default
+   projectile-cache-file (expand-file-name ".projectile-cache" user-emacs-directory)
+   projectile-keymap-prefix (kbd "C-c C-p")
+   projectile-known-projects-file (expand-file-name
+                                   ".projectile-bookmarks" user-emacs-directory))
+  :config
+  (projectile-global-mode 1)
+  (setq-default
+   projectile-completion-system 'ivy
+   projectile-enable-caching t
+   projectile-mode-line '(:eval (projectile-project-name))))
+#+END_SRC
+** Spotify
+#+BEGIN_SRC emacs-lisp
+(use-package counsel-spotify
+  :config
+  (setq-default
+    counsel-spotify-client-id counsel-spotify-client-id
+    counsel-spotify-client-secret counsel-spotify-client-secret))
+#+END_SRC
+* Lenguajes
+** Clojure
+#+BEGIN_SRC emacs-lisp
+(use-package clojure-mode)
+(use-package cider)
+#+END_SRC
+** Common Lisp
+#+BEGIN_SRC emacs-lisp
+(use-package sly
+  :config (setq inferior-lisp-program "/usr/bin/sbcl"))
+#+END_SRC
+** CSS
+#+BEGIN_SRC emacs-lisp
+(use-package css-mode
+  :config (setq-default css-indent-offset 2))
+
+(use-package scss-mode
+  :delight scss-mode "SCSS"
+  :mode ("\\.sass\\'" "\\.scss\\'"))
+#+END_SRC
+** CSV
+#+BEGIN_SRC emacs-lisp
+(use-package csv-mode
+  :config (setq-default csv-align-padding 2))
+#+END_SRC
+** Docker
+#+BEGIN_SRC emacs-lisp
+(use-package dockerfile-mode
+  :delight "Dockerfile"
+  :bind (:map dockerfile-mode-map
+          ("C-c b" . dockerfile-build-buffer)
+          ("C-c B" . dockerfile-build-no-cache-buffer))
+  :mode "Dockerfile\\'")
+
+(use-package docker)
+#+END_SRC
+** Emacs Lisp
+#+BEGIN_SRC emacs-lisp
+(use-package emacs-lisp-mode
+  :ensure nil
+  :delight emacs-lisp-mode "Emacs Lisp"
+  :config (delight 'lisp-interaction-mode "Lisp Interaction"))
+
+(use-package elisp-slime-nav
+  :delight
+  :bind (:map elisp-slime-nav-mode-map
+         ("C-c d" . elisp-slime-nav-describe-elisp-thing-at-point))
+  :hook (emacs-lisp-mode . elisp-slime-nav-mode))
+
+(use-package eldoc
+  :delight)
+#+END_SRC
+** Javascript
+#+BEGIN_SRC emacs-lisp
+(use-package js
+  :ensure nil
+  :delight js-mode "JS")
+
+(use-package js2-mode
+  :delight js2-minor-mode " JS2"
+  :hook (js-mode . js2-minor-mode)
+  :config
+  (setq-default
+    js2-idle-time-delay 0
+    js2-mode-show-parse-errors nil
+    js2-mode-show-strict-warnings nil
+    js-indent-level 2)
+  :bind (:map js2-mode-map
+          ("C-c C-C" . js-send-last-sexp)
+          ("C-c b"   . js-send-buffer)))
+
+(use-package js2-refactor
+  :diminish (js2-refactor-mode yas-minor-mode)
+  :hook (js2-minor-mode . js2-refactor-mode)
+  :config
+  (setq-default js2-skip-preprocessors-directives t)
+  (js2r-add-keybindings-with-prefix "C-C C-r"))
+
+(use-package mocha
+  :delight " mocha "
+  :bind (:map js2-mode-map
+          ("C-c t" . mocha-test-at-point)
+          ("C-c T" . mocha-test-project)))
+
+#+END_SRC
+** Markdown
+#+BEGIN_SRC emacs-lisp
+(use-package markdown-mode
+  :commands (markdown-mode gfm-mode)
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode)))
+#+END_SRC
