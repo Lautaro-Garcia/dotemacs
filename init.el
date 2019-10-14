@@ -32,6 +32,9 @@
   ;; Usar el último org
   (use-package org :ensure org-plus-contrib)
 
+  ;; Cargar los secrets
+  (load (expand-file-name ".secrets.el" user-emacs-directory))
+  
   ;; Cargar la configuración desde el .org
   (org-babel-load-file (expand-file-name "dotemacs.org" user-emacs-directory))
   (garbage-collect))

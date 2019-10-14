@@ -118,6 +118,18 @@ completion candidates.
    company-require-match nil
    company-tooltip-align-annotations t))
    #+END_SRC
+** Backups
+Emacs crea automáticamente archivos terminados en ~ de backup.
+Me gusta la funcionalidad, pero no quiero tener todos los proyectos
+llenos de estos archivos, así que seteo que se dejen en otro lado
+#+BEGIN_SRC emacs-lisp
+(setq backup-directory-alist '(("." . "~/.emacs.d/backup"))
+  backup-by-copying t    ; No usar links
+  version-control t      ; Usar número de versión en los backups
+  delete-old-versions t
+  kept-new-versions 20
+  kept-old-versions 5)
+#+END_SRC
 ** Descubribilidad (?)
 [[https://github.com/justbur/emacs-which-key][Which key]] es un paquete para que aparezca un buffer inferior contándote
 qué nuevo comando podés apretar cuando tipeás alguno
@@ -158,6 +170,19 @@ porque me parece más rápido y conceptualmente más copado
   :config
   (all-the-icons-ivy-setup))
 #+END_SRC
+** Mútliples cursores
+#+BEGIN_QUOTE
+Multiple cursors for Emacs. This is some pretty crazy functionality, so yes, there are kinks.
+Don't be afraid tho, I've been using it since 2011 with great success and much merriment.
+
+[[https://github.com/magnars/multiple-cursors.el][Magnar Sveen]]
+#+END_QUOTE
+#+BEGIN_SRC emacs-lisp
+(use-package multiple-cursors
+  :bind (("C-c m c" . mc/edit-lines)
+         ("C->"     . mc/mark-next-like-this)
+         ("C-<"     . mc/mark-previous-like-this)))
+#+END_SRC
 ** Parinfer
 La filosofía de [[https://github.com/DogLooksGood/parinfer-mode][Parinfer]] es bien distinta a la de [[https://www.emacswiki.org/emacs/ParEdit][Paredit]] y busca, básicamente,
 que uno se olvide directamente de poner manualmente los paréntesis (llevándolo al
@@ -196,7 +221,16 @@ paréntesis tiene que poner según el grado de indentación del texto.
 ** Spotify
 #+BEGIN_SRC emacs-lisp
 (use-package counsel-spotify
+  :bind-keymap ("C-x m" . counsel-spotify-map)
+  :bind (:map counsel-spotify-map
+          ("SPC" . 'counsel-spotify-toggle-play-pause)
+          ("<right>" . 'counsel-spotify-next)
+          ("<left>" . 'counsel-spotify-previous)
+          ("A" . 'counsel-spotify-search-artist)
+          ("a" . 'counsel-spotify-search-album)
+          ("t" . 'counsel-spotify-search-track))
   :config
+  (defvar counsel-spotify-map (make-sparse-keymap))
   (setq-default
     counsel-spotify-client-id counsel-spotify-client-id
     counsel-spotify-client-secret counsel-spotify-client-secret))
