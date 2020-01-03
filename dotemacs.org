@@ -251,6 +251,16 @@ The default emacs undo has two limitations this package aims to resolve,
   ("C-z" . 'undo-fu-only-undo)
   ("C-S-z" . 'undo-fu-only-redo))
 #+END_SRC
+** Whitespace
+#+BEGIN_SRC emacs-lisp
+(use-package whitespace
+  :delight global-whitespace-mode
+  :init
+  (global-whitespace-mode)
+  :custom-face
+  (whitespace-space ((nil (:background nil :foreground "lightgray"))))
+  (whitespace-line ((nil (:background nil)))))
+#+END_SRC
 * Lenguajes
 ** Clojure
 #+BEGIN_SRC emacs-lisp
