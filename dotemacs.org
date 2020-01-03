@@ -235,6 +235,22 @@ paréntesis tiene que poner según el grado de indentación del texto.
     counsel-spotify-client-id counsel-spotify-client-id
     counsel-spotify-client-secret counsel-spotify-client-secret))
 #+END_SRC
+** Undo
+#+BEGIN_QUOTE
+The default emacs undo has two limitations this package aims to resolve,
+  Two actions are required to initiate redo.
+  It's easy to accidentally redo past the point where undo started making it inconvenient to restore the document to the point when undo began.
+
+[[https://gitlab.com/ideasman42/emacs-undo-fu][Campbell Barton]]
+#+END_QUOTE
+
+#+BEGIN_SRC emacs-lisp
+(use-package undo-fu
+  :commands (undo-fu-only-undo undo-fu-only-redo)
+  :bind
+  ("C-z" . 'undo-fu-only-undo)
+  ("C-S-z" . 'undo-fu-only-redo))
+#+END_SRC
 * Lenguajes
 ** Clojure
 #+BEGIN_SRC emacs-lisp
