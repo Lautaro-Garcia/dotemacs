@@ -218,6 +218,13 @@ paréntesis tiene que poner según el grado de indentación del texto.
    projectile-enable-caching t
    projectile-mode-line '(:eval (projectile-project-name))))
 #+END_SRC
+** Rest client
+#+BEGIN_SRC emacs-lisp
+(use-package restclient
+  :defer 1
+  :delight "rest-client"
+  :mode (("\\.http\\'" . restclient-mode)))
+#+END_SRC
 ** Spotify
 #+BEGIN_SRC emacs-lisp
 (use-package counsel-spotify
