@@ -175,7 +175,10 @@ porque me parece más rápido y conceptualmente más copado
   :defer 2
   :delight
   :config (ivy-mode 1)
-  :bind ("C-s" . 'swiper))
+  :bind ("C-s" . 'swiper)
+        ("C-S-s" . 'swiper-all)
+        ("M-s" . 'swiper-thing-at-point)
+        ("M-S-s" . 'swiper-all-thing-at-point))
 
 (use-package counsel
   :bind ("C-x t" . 'counsel-load-theme))
