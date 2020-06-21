@@ -378,3 +378,27 @@ The default emacs undo has two limitations this package aims to resolve,
          ("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode)))
 #+END_SRC
+** Typescript
+#+BEGIN_QUOTE
+Tide - TypeScript Interactive Development Environment for Emacs
+
+[[https://github.com/ananthakumaran/tide/][Tide team]]
+#+END_QUOTE
+
+#+BEGIN_SRC emacs-lisp
+(use-package tide
+  :config
+  (tide-setup)
+  (flycheck-mode +1)
+  (eldoc-mode +1)
+  :bind (:map tide-mode-map
+          ("C-c C-r" . tide-refactor)
+          ("C-c ?" . tide-references)
+          ("C-c r" . tide-rename-symbol)
+          ("C-c o" . tide-organize-imports)
+          ("C-c f" . tide-format)
+          ("C-c SPC" . tide-fix))
+  :hook ((typescript-mode . tide-mode)
+         (typescript-mode . tide-hl-identifier-mode)
+         (before-save . tide-format-before-save)))
+#+END_SRC
