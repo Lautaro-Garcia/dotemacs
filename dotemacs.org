@@ -402,3 +402,9 @@ Tide - TypeScript Interactive Development Environment for Emacs
          (typescript-mode . tide-hl-identifier-mode)
          (before-save . tide-format-before-save)))
 #+END_SRC
+** Yaml
+#+BEGIN_SRC emacs-lisp
+(use-package yaml-mode
+  :mode (("\\.yml\\'" . yaml-mode)
+         ("\\.yaml\\'" . yaml-mode)))
+#+END_SRC
